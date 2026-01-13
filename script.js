@@ -1,36 +1,80 @@
-function sendMessage() {
-    let input = document.getElementById("userInput");
-    let message = input.value.toLowerCase();
-    let chatBox = document.getElementById("chatBox");
+body {
+    font-family: Arial, sans-serif;
+    background: #e6f2ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
 
-    if (message === "") return;
+.chat-container {
+    width: 360px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px gray;
+    overflow: hidden;
+}
 
-    // User message
-    chatBox.innerHTML += `<div class="user">${input.value}</div>`;
+.chat-header {
+    background: #007bff;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    font-weight: bold;
+}
 
-    let reply = "";
+.chat-box {
+    height: 320px;
+    padding: 10px;
+    overflow-y: auto;
+}
 
-    if (message.includes("attendance")) {
-        reply = "📊 Your attendance is 78%.";
-    } 
-    else if (message.includes("minimum")) {
-        reply = "✅ Minimum attendance required is 75%.";
-    }
-    else if (message.includes("rules")) {
-        reply = "📌 Students with attendance below 75% are not eligible for exams.";
-    }
-    else if (message.includes("hello") || message.includes("hi")) {
-        reply = "Hello! 😊 How can I help you with attendance?";
-    }
-    else {
-        reply = "❓ Sorry, I didn't understand. Try typing attendance, minimum, or rules.";
-    }
+.user {
+    text-align: right;
+    margin: 6px;
+}
 
-    // Bot reply
-    setTimeout(() => {
-        chatBox.innerHTML += `<div class="bot">${reply}</div>`;
-        chatBox.scrollTop = chatBox.scrollHeight;
-    }, 500);
+.user span {
+    background: #d1e7ff;
+    padding: 8px;
+    border-radius: 10px;
+    display: inline-block;
+}
 
-    input.value = "";
+.bot {
+    text-align: left;
+    margin: 6px;
+}
+
+.bot span {
+    background: #f1f1f1;
+    padding: 8px;
+    border-radius: 10px;
+    display: inline-block;
+}
+
+small {
+    display: block;
+    color: gray;
+    font-size: 10px;
+}
+
+.chat-input {
+    display: flex;
+    border-top: 1px solid #ccc;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    outline: none;
+}
+
+.chat-input button {
+    padding: 10px 15px;
+    border: none;
+    background: #007bff;
+    color: white;
+    cursor: pointer;
 }
