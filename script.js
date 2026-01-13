@@ -1,0 +1,36 @@
+function sendMessage() {
+    let input = document.getElementById("userInput");
+    let message = input.value.toLowerCase();
+    let chatBox = document.getElementById("chatBox");
+
+    if (message === "") return;
+
+    // User message
+    chatBox.innerHTML += `<div class="user">${input.value}</div>`;
+
+    let reply = "";
+
+    if (message.includes("attendance")) {
+        reply = "📊 Your attendance is 78%.";
+    } 
+    else if (message.includes("minimum")) {
+        reply = "✅ Minimum attendance required is 75%.";
+    }
+    else if (message.includes("rules")) {
+        reply = "📌 Students with attendance below 75% are not eligible for exams.";
+    }
+    else if (message.includes("hello") || message.includes("hi")) {
+        reply = "Hello! 😊 How can I help you with attendance?";
+    }
+    else {
+        reply = "❓ Sorry, I didn't understand. Try typing attendance, minimum, or rules.";
+    }
+
+    // Bot reply
+    setTimeout(() => {
+        chatBox.innerHTML += `<div class="bot">${reply}</div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }, 500);
+
+    input.value = "";
+}
