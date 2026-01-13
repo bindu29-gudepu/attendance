@@ -1,62 +1,95 @@
-body {
-    font-family: Arial, sans-serif;
-    background: #e6f2ff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+let expectingRoll = false;
+
+const attendanceData = {
+    "21A01": 82,
+    "21A02": 68,
+    "21A03": 90,
+    "21A04": 74,
+    "21A05": 88
+};
+
+function sendMessage() {
+    let input = document.getElementById("userInput");
+    let message = input.value.trim().toLowerCase();
+    let chatBox = document.getElementById("chatBox");
+
+    if (message === "") return;
+
+    // User message
+    chatBox.innerHTML += `
+        <div class="user">
+            <span>${input.value}</span>
+        </div>
+    `;
+
+    input.value = "";
+
+    let reply = "";
+
+    if (expectingRoll) {
+        let roll = message.toUpperCase();
+        if (attendanceData[roll] !== undefined) {
+            let att = attendanceData[roll];
+            reply = `📊 Attendance for ${roll} is ${att}%.`;
+            reply += att < 75
+                ? " ⚠ Warning: Attendance below minimum!"
+                : " ✅ You are eligible for exams.";
+        } else {
+            reply = "❌ Roll number not found.";
+        }
+        expectingRoll = false;
+    }
+    else if (message.includes("attendance")) {
+        reply = "Please enter your roll number.";
+        expectingRoll = true;
+    }
+    else if (message.includes("minimum")) {
+        reply = "✅ Minimum attendance required is 75%.";
+    }
+    else if (message.includes("rules")) {
+        reply = "📌 Students with attendance below 75% are not allowed for exams.";
+    }
+    else if (message.includes("help")) {
+        reply = `
+📌 Available commands:<br>
+• attendance<br>
+• minimum<br>
+• rules<br>
+• help
+        `;
+    }
+    else if (message.includes("hi") || message.includes("hello")) {
+        reply = "Hello 😊 How can I help you?";
+    }
+    else {
+        reply = "❓ Sorry, I didn’t understand. Type <b>help</b>.";
+    }
+
+    // Typing indicator
+    chatBox.innerHTML += `
+        <div class="bot" id="typing">
+            <span>Bot is typing...</span>
+        </div>
+    `;
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    setTimeout(() => {
+        document.getElementById("typing").remove();
+        let time = new Date().toLocaleTimeString();
+        chatBox.innerHTML += `
+            <div class="bot">
+                <span>${reply}</span>
+                <small>${time}</small>
+            </div>
+        `;
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }, 800);
 }
 
-.chat-container {
-    width: 350px;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 0 10px #999;
-    overflow: hidden;
-}
+// Enter key support
+document.getElementById("userInput").addEventListener("keypress", function (e) {
+    if (e.key === "Enter") {
+        sendMessage();
+    }
+});
 
-.chat-header {
-    background: #007bff;
-    color: white;
-    text-align: center;
-    padding: 15px;
-    font-weight: bold;
-}
-
-.chat-box {
-    height: 300px;
-    padding: 10px;
-    overflow-y: auto;
-}
-
-.chat-box .user {
-    text-align: right;
-    margin: 8px;
-    color: #007bff;
-}
-
-.chat-box .bot {
-    text-align: left;
-    margin: 8px;
-    color: #333;
-}
-
-.chat-input {
-    display: flex;
-    border-top: 1px solid #ccc;
-}
-
-.chat-input input {
-    flex: 1;
-    padding: 10px;
-    border: none;
-    outline: none;
-}
-
-.chat-input button {
-    padding: 10px 15px;
-    border: none;
-    background: #007bff;
-    color: white;
-    cursor: pointer;
-}
