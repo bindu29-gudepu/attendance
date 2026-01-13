@@ -1,95 +1,37 @@
-let expectingRoll = false;
-
-const attendanceData = {
-    "21A01": 82,
-    "21A02": 68,
-    "21A03": 90,
-    "21A04": 74,
-    "21A05": 88
-};
 
 function sendMessage() {
     let input = document.getElementById("userInput");
-    let message = input.value.trim().toLowerCase();
+    let message = input.value.toLowerCase();
     let chatBox = document.getElementById("chatBox");
 
     if (message === "") return;
 
     // User message
-    chatBox.innerHTML += `
-        <div class="user">
-            <span>${input.value}</span>
-        </div>
-    `;
-
-    input.value = "";
+    chatBox.innerHTML += `<div class="user">${input.value}</div>`;
 
     let reply = "";
 
-    if (expectingRoll) {
-        let roll = message.toUpperCase();
-        if (attendanceData[roll] !== undefined) {
-            let att = attendanceData[roll];
-            reply = `📊 Attendance for ${roll} is ${att}%.`;
-            reply += att < 75
-                ? " ⚠ Warning: Attendance below minimum!"
-                : " ✅ You are eligible for exams.";
-        } else {
-            reply = "❌ Roll number not found.";
-        }
-        expectingRoll = false;
-    }
-    else if (message.includes("attendance")) {
-        reply = "Please enter your roll number.";
-        expectingRoll = true;
-    }
+    if (message.includes("attendance")) {
+        reply = "📊 Your attendance is 78%.";
+    } 
     else if (message.includes("minimum")) {
         reply = "✅ Minimum attendance required is 75%.";
     }
     else if (message.includes("rules")) {
-        reply = "📌 Students with attendance below 75% are not allowed for exams.";
+        reply = "📌 Students with attendance below 75% are not eligible for exams.";
     }
-    else if (message.includes("help")) {
-        reply = `
-📌 Available commands:<br>
-• attendance<br>
-• minimum<br>
-• rules<br>
-• help
-        `;
-    }
-    else if (message.includes("hi") || message.includes("hello")) {
-        reply = "Hello 😊 How can I help you?";
+    else if (message.includes("hello") || message.includes("hi")) {
+        reply = "Hello! 😊 How can I help you with attendance?";
     }
     else {
-        reply = "❓ Sorry, I didn’t understand. Type <b>help</b>.";
+        reply = "❓ Sorry, I didn't understand. Try typing attendance, minimum, or rules.";
     }
 
-    // Typing indicator
-    chatBox.innerHTML += `
-        <div class="bot" id="typing">
-            <span>Bot is typing...</span>
-        </div>
-    `;
-    chatBox.scrollTop = chatBox.scrollHeight;
-
+    // Bot reply
     setTimeout(() => {
-        document.getElementById("typing").remove();
-        let time = new Date().toLocaleTimeString();
-        chatBox.innerHTML += `
-            <div class="bot">
-                <span>${reply}</span>
-                <small>${time}</small>
-            </div>
-        `;
+        chatBox.innerHTML += `<div class="bot">${reply}</div>`;
         chatBox.scrollTop = chatBox.scrollHeight;
-    }, 800);
+    }, 500);
+
+    input.value = "";
 }
-
-// Enter key support
-document.getElementById("userInput").addEventListener("keypress", function (e) {
-    if (e.key === "Enter") {
-        sendMessage();
-    }
-});
-
